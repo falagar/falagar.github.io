@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>我的測試首頁</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>歡迎來到我的測試首頁</h1>
+        <p>這是一個 GitHub Pages 測試網頁</p>
+    </header>
+
+    <main>
+        <section>
+            <h2>簡單互動</h2>
+            <button id="helloBtn">點我顯示訊息</button>
+            <p id="message"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 我的測試首頁</p>
+    </footer>
+
+    <script>
+        const btn = document.getElementById('helloBtn');
+        const msg = document.getElementById('message');
+
+        btn.addEventListener('click', () => {
+            msg.textContent = "你好！這是測試訊息。";
+        });
+    </script>
+</body>
+</html>
