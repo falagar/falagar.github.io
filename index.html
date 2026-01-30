@@ -2,20 +2,46 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>JS 測試</title>
+    <title>Supabase Inline 測試</title>
 </head>
 <body>
-    <h1>JS 測試</h1>
-    <button id="btn">點我測試 alert</button>
+    <h1>Supabase 連線測試</h1>
+    <button id="testBtn">連線 Supabase</button>
+
+    <!-- 1️⃣ 引入 Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 
     <script>
-        console.log("JS 開始執行"); // 確認有沒有執行
-        alert("JS 已經執行！");
+    // 2️⃣ 初始化 Supabase
+    const SUPABASE_URL = "https://unofhgslgjzneidlzfev.supabase.co"; // 換成你的 URL
+    const SUPABASE_ANON_KEY = "sb_publishable_jmDBVGNV-bu5xp53kLTusQ_BjGp3XJD"; // 換成你的 anon key
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const btn = document.getElementById("btn");
-        btn.addEventListener("click", () => {
-            alert("按鈕被點擊了！");
-        });
+    alert("JS + Supabase SDK 已經載入！");
+
+    // 3️⃣ 綁定按鈕測試
+    document.getElementById("testBtn").addEventListener("click", async () => {
+        alert("開始連線 Supabase...");
+
+        try {
+            // 測試抓取資料表（換成你自己的資料表名稱）
+            const { data, error } = await supabase
+                .from('notes') 
+                .select('*')
+                .limit(1);
+
+            if (error) {
+                console.error("Supabase 錯誤:", error);
+                alert("Supabase 連線失敗，請看 console");
+            } else {
+                console.log("Supabase 測試資料:", data);
+                alert("Supabase 連線成功，請查看 console log");
+            }
+        } catch (err) {
+            console.error("例外錯誤:", err);
+            alert("連線發生例外，請查看 console");
+        }
+    });
     </script>
 </body>
 </html>
