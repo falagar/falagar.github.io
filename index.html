@@ -1,121 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <title>Supabase 最小登入範例</title>
+    <meta charset="UTF-8">
+    <title>Supabase 測試</title>
 </head>
 <body>
+    <h1>Supabase 測試</h1>
+    <button id="testBtn">連線 Supabase</button>
 
-<h2>Supabase 登入</h2>
+    <!-- Supabase 官方 JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 
-<input id="email" type="email" placeholder="Email" />
-<br />
-<input id="password" type="password" placeholder="Password" />
-<br /><br />
+    <script>
+    // 1️⃣ 初始化 Supabase
+    const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"; // 換成你的 URL
+    const SUPABASE_ANON_KEY = "YOUR_ANON_KEY"; // 換成你的 anon key
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-<button onclick="login()">登入</button>
-<button onclick="logout()">登出</button>
+    // 2️⃣ 按鈕測試
+    const btn = document.getElementById("testBtn");
+    btn.addEventListener("click", async () => {
+        alert("開始連接 Supabase"); // 確認 JS 有執行
 
-<hr />
+        try {
+            // 3️⃣ 測試抓取資料表
+            const { data, error } = await supabase
+                .from('your_table') // 換成你自己的資料表名稱
+                .select('*')
+                .limit(1);
 
-<h2>新增資料</h2>
-<input id="note" placeholder="輸入一段文字" />
-<button onclick="addNote()">新增</button>
-
-<hr />
-
-<h2>我的資料</h2>
-<ul id="list"></ul>
-
-<!-- Supabase SDK（官方） -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-  // 🔹 換成你自己的
-  const SUPABASE_URL = "https://unofhgslgjzneidlzfev.supabase.co"
-  const SUPABASE_ANON_KEY = "sb_publishable_jmDBVGNV-bu5xp53kLTusQ_BjGp3XJD"
-
-  // 初始化 Supabase
-  const supabase = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  )
-
-  // 登入
-  async function login() {
- alert("login() called") 
-
-    const email = document.getElementById("email").value
-    const password = document.getElementById("password").value
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
-
-    if (error) {
-      alert(error.message)
-    } else {
-      alert("登入成功")
-      loadNotes()
-    }
-  }
-
-  // 登出
-  async function logout() {
-    await supabase.auth.signOut()
-    document.getElementById("list").innerHTML = ""
-    alert("已登出")
-  }
-
-  // 新增資料
-  async function addNote() {
-    const text = document.getElementById("note").value
-    if (!text) return
-
-    const { data: user } = await supabase.auth.getUser()
-
-    const { error } = await supabase.from("notes").insert({
-      user_id: user.user.id,
-      content: text
-    })
-
-    if (error) {
-      alert(error.message)
-    } else {
-      document.getElementById("note").value = ""
-      loadNotes()
-    }
-  }
-
-  // 查詢資料
-  async function loadNotes() {
-    const { data, error } = await supabase
-      .from("notes")
-      .select("id, content")
-
-    if (error) {
-      alert(error.message)
-      return
-    }
-
-    const list = document.getElementById("list")
-    list.innerHTML = ""
-
-    data.forEach(row => {
-      const li = document.createElement("li")
-      li.innerText = row.content
-      list.appendChild(li)
-    })
-  }
-
-  // 重新整理時，如果已登入，自動載入
-  supabase.auth.onAuthStateChange((event, session) => {
-    if (session) {
-      loadNotes()
-    }
-  })
-</script>
-
+            if (error) {
+                console.error("Supabase 錯誤:", error);
+                alert("Supabase 連線失敗，請看 console");
+            } else {
+                console.log("Supabase 測試資料:", data);
+                alert("Supabase 連線成功，請查看 console log");
+            }
+        } catch (err) {
+            console.error("例外錯誤:", err);
+            alert("連線發生例外，請查看 console");
+        }
+    });
+    </script>
 </body>
 </html>
